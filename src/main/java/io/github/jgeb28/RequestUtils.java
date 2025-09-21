@@ -33,10 +33,10 @@ public class RequestUtils {
 
         Pattern methodPattern = Pattern.compile("[A-Z0-9!#$%&'*+-.^_`|~]+");
         Matcher methodValidator = methodPattern.matcher(arr[0]);
-        if(!methodValidator.matches())
+        if (!methodValidator.matches())
             throw new IllegalArgumentException("Invalid request line format: Invalid method format");
 
-        if(!arr[2].equals("HTTP/1.1"))
+        if (!arr[2].equals("HTTP/1.1"))
             throw new IllegalArgumentException("Invalid request line format: Invalid HTTP version format");
 
         return new RequestLine(arr[0], arr[1], arr[2]);
@@ -44,7 +44,7 @@ public class RequestUtils {
 
     public static Map<String, String> parseHeaders(InputStream input) throws IOException, IllegalArgumentException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int prev = -1, prev2 = -1,  curr;
+        int prev = -1, prev2 = -1, curr;
         Map<String, String> headers = new HashMap<>();
 
         while ((curr = input.read()) != -1) {
@@ -65,7 +65,7 @@ public class RequestUtils {
                 continue;
 
             int colonIndex = line.indexOf(':');
-            if(colonIndex == -1)
+            if (colonIndex == -1)
                 throw new IllegalArgumentException("Invalid header format: Invalid line format");
 
             String fieldName = line.substring(0, colonIndex).trim().toLowerCase();
@@ -75,7 +75,7 @@ public class RequestUtils {
             if (!fieldLineValidator.matches())
                 throw new IllegalArgumentException("Invalid header format: Invalid field-line format");
 
-            if(headers.containsKey(fieldName)) {
+            if (headers.containsKey(fieldName)) {
                 headers.compute(fieldName, (k, val) -> val + ", " + token);
             } else {
                 headers.put(fieldName, token);
@@ -103,7 +103,6 @@ public class RequestUtils {
             input.reset();
             throw new IllegalArgumentException("Invalid body format: Content-Length mismatch.");
         }
-
 
         return buffer;
     }
